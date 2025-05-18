@@ -1,6 +1,6 @@
 // script.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Fungsi untuk mengambil data transaksi dari API
+    // Fungsi untuk mengambil data transaksi secara live
     function fetchTransactionData() {
         fetch('https://chainscan-test.0g.ai/open/statistics/transaction?sort=DESC&skip=0&limit=10', {
             method: 'GET',
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             const transactions = data.result.list;
-            displayTransactions(transactions);
+            displayTransactions(transactions);  // Menampilkan transaksi di grid
         })
         .catch(error => {
             console.error('Error fetching transaction data:', error);
@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fungsi untuk menampilkan transaksi dalam grid
     function displayTransactions(transactions) {
         const container = document.getElementById('transaction-grid');
-        container.innerHTML = '';  // Reset grid
+        container.innerHTML = '';  // Reset grid sebelum menambah data baru
 
         transactions.forEach(tx => {
             const transactionElement = document.createElement('div');
             transactionElement.classList.add('transaction-box');
             
-            // Ukuran kotak berdasarkan jumlah transaksi
-            const size = Math.sqrt(tx.count) * 2;  // Skala ukuran kotak
+            // Ukuran kotak berdasarkan jumlah transaksi (mengurangi skala)
+            const size = Math.min(Math.sqrt(tx.count) * 1.5, 200);  // Skala lebih kecil dan tidak lebih dari 200px
             const color = tx.count > 500000 ? '#FF5722' : '#4CAF50';
 
             // Mengatur ukuran kotak dan warna
@@ -51,5 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    fetchTransactionData();  // Ambil data transaksi saat halaman dimuat
+    // Polling setiap 5 detik untuk memperbarui data
+    setInterval(fetchTransactionData, 5000);  // Memanggil fetch setiap 5 detik
+
+    // Ambil data transaksi saat pertama kali halaman dimuat
+    fetchTransactionData();
 });
