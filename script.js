@@ -18,15 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fungsi untuk menampilkan transaksi dalam grid dengan D3.js
+    // Fungsi untuk menampilkan transaksi dalam grid
     function displayTransactions(transactions) {
         const container = document.getElementById('transaction-grid');
-        container.innerHTML = '';  // Reset grid
+        container.innerHTML = '';  // Reset grid sebelum menambah data baru
 
         const width = container.offsetWidth;
         const height = window.innerHeight;
 
-        // Set up SVG canvas with D3.js
+        // Set up SVG canvas dengan D3.js
         const svg = d3.select(container)
             .append('svg')
             .attr('width', width)
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Scales for size
         const sizeScale = d3.scaleSqrt()
             .domain([0, d3.max(transactions, d => d.count)])
-            .range([10, 100]);  // Min size 10px, max size 100px
+            .range([10, 200]);  // Min size 10px, max size 200px
 
         // Create rectangles for each transaction
         svg.selectAll('.transaction')
@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .enter()
             .append('rect')
             .attr('class', 'transaction-box')
-            .attr('x', (d, i) => (i % 10) * 110)  // Grid layout (10 columns)
-            .attr('y', (d, i) => Math.floor(i / 10) * 110)
+            .attr('x', (d, i) => (i % 10) * 210)  // Grid layout (10 columns)
+            .attr('y', (d, i) => Math.floor(i / 10) * 210)
             .attr('width', d => sizeScale(d.count))
             .attr('height', d => sizeScale(d.count))
             .attr('fill', d => d.count > 500000 ? '#FF5722' : '#4CAF50')
