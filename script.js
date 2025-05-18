@@ -1,5 +1,6 @@
 // script.js
 document.addEventListener('DOMContentLoaded', function() {
+    // Fungsi untuk mengambil data transaksi dari API
     function fetchTransactionData() {
         fetch('https://chainscan-test.0g.ai/open/statistics/transaction?sort=DESC&skip=0&limit=10', {
             method: 'GET',
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Fungsi untuk menampilkan transaksi dalam grid
     function displayTransactions(transactions) {
         const container = document.getElementById('transaction-grid');
         container.innerHTML = '';  // Reset grid
@@ -25,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const transactionElement = document.createElement('div');
             transactionElement.classList.add('transaction-box');
             
-            // Ukuran kotak berdasarkan jumlah transaksi (mengurangi skala)
-            const size = Math.sqrt(tx.count) * 2;  // Mengurangi skala ukuran kotak
+            // Ukuran kotak berdasarkan jumlah transaksi
+            const size = Math.sqrt(tx.count) * 2;  // Skala ukuran kotak
             const color = tx.count > 500000 ? '#FF5722' : '#4CAF50';
 
             // Mengatur ukuran kotak dan warna
@@ -49,5 +51,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    fetchTransactionData();
+    fetchTransactionData();  // Ambil data transaksi saat halaman dimuat
 });
