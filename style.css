@@ -7,7 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Pastikan grid berada di tengah layar */
+    height: 100vh;
     color: #fff;
 }
 
@@ -22,23 +22,50 @@ h1 {
 
 #transaction-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Ukuran minimum kotak */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ukuran kotak minimum lebih kecil */
     gap: 10px;
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
-    justify-items: center;  /* Menjaga item grid tetap di tengah */
+    justify-items: center;
 }
 
+/* Menyesuaikan ukuran kotak transaksi */
 .transaction-box {
     background-color: green;
     padding: 10px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .transaction-box:hover {
     transform: scale(1.1);
     background-color: #00ff7f;
+}
+
+.transaction-box h4, .transaction-box p {
+    font-size: 0.8em;  /* Menyesuaikan ukuran teks */
+}
+
+/* Untuk tampilan di layar kecil, pastikan grid responsif */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    #transaction-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Ukuran kotak lebih kecil */
+    }
+
+    .transaction-box {
+        padding: 8px;
+    }
+
+    .transaction-box h4, .transaction-box p {
+        font-size: 0.7em;  /* Ukuran teks lebih kecil untuk perangkat kecil */
+    }
 }
