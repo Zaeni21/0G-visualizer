@@ -7,12 +7,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh; /* Pastikan grid berada di tengah layar */
     color: #fff;
 }
 
 .container {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 }
 
@@ -26,9 +30,9 @@ h1 {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ukuran kotak lebih besar */
     gap: 15px;
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 auto; /* Menjaga grid tetap di tengah */
     padding: 20px;
-    justify-items: center;
+    justify-items: center; /* Menjaga setiap item tetap terpusat di dalam grid */
 }
 
 .transaction-box {
