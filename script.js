@@ -1,6 +1,6 @@
 // script.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Fungsi untuk mengambil data transaksi secara live
+    // Fungsi untuk mengambil data transaksi dari API
     function fetchTransactionData() {
         fetch('https://chainscan-test.0g.ai/open/statistics/transaction?sort=DESC&skip=0&limit=10', {
             method: 'GET',
@@ -11,71 +11,47 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             const transactions = data.result.list;
-            displayTransactions(transactions);
-            createChart(transactions);
+            displayTransactions(transactions);  // Menampilkan transaksi di grid
         })
         .catch(error => {
             console.error('Error fetching transaction data:', error);
         });
     }
 
-    // Fungsi untuk menampilkan transaksi
+    // Fungsi untuk menampilkan transaksi dalam bentuk kotak-kotak
     function displayTransactions(transactions) {
-        const container = document.getElementById('transaction-container');
-        container.innerHTML = ''; // Reset kontainer untuk memperbarui data
+        const container = document.getElementById('transaction-grid');
+        container.innerHTML = '';  // Reset grid sebelum menambah data baru
 
         transactions.forEach(tx => {
-            const txElement = document.createElement('div');
-            txElement.classList.add('transaction-box');
-            txElement.innerHTML = `
-                <h3>Date: ${tx.statTime}</h3>
-                <p class="amount">Transaction Count: ${tx.count}</p>
+            const transactionElement = document.createElement('div');
+            transactionElement.classList.add('transaction-box');
+            
+            // Ukuran kotak berdasarkan jumlah transaksi (misalnya, berdasarkan count)
+            const size = Math.sqrt(tx.count) * 5;  // Skala ukuran kotak
+
+            // Memberi warna berdasarkan transaksi
+            const color = tx.count > 500000 ? '#FF5722' : '#4CAF50';
+
+            transactionElement.style.width = `${size}px`;
+            transactionElement.style.height = `${size}px`;
+            transactionElement.style.backgroundColor = color;
+
+            // Menambahkan informasi ke dalam kotak
+            transactionElement.innerHTML = `
+                <h4>${tx.statTime}</h4>
+                <p>Tx Count: ${tx.count}</p>
             `;
-            container.appendChild(txElement);
+
+            // Menambahkan event klik untuk detail
+            transactionElement.addEventListener('click', () => {
+                alert(`Date: ${tx.statTime}\nTransaction Count: ${tx.count}`);
+            });
+
+            container.appendChild(transactionElement);
         });
     }
 
-    // Fungsi untuk membuat grafik
-    function createChart(transactions) {
-        const ctx = document.getElementById('transactionChart').getContext('2d');
-        const labels = transactions.map(tx => tx.statTime);  // Tanggal transaksi
-        const data = transactions.map(tx => tx.count);  // Jumlah transaksi
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Transaction Count',
-                    data: data,
-                    borderColor: 'rgb(75, 192, 192)',
-                    fill: false,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Count'
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // Polling setiap 5 detik untuk memperbarui data
-    setInterval(fetchTransactionData, 5000);  // Memanggil fetch setiap 5 detik
-
-    // Ambil data transaksi saat pertama kali halaman dimuat
+    // Ambil data transaksi saat halaman dimuat
     fetchTransactionData();
 });
