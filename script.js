@@ -11,56 +11,48 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             const transactions = data.result.list;
-            const todayTransactions = filterTodayTransactions(transactions); // Filter transaksi hari ini
-            displayTransactions(todayTransactions);  // Menampilkan transaksi hari ini di grid
+            displayTransactions(transactions);  // Menampilkan transaksi di grid
         })
         .catch(error => {
             console.error('Error fetching transaction data:', error);
         });
     }
 
-    // Fungsi untuk memfilter transaksi berdasarkan tanggal hari ini
-    function filterTodayTransactions(transactions) {
-        const today = new Date();
-        const todayDate = today.toISOString().split('T')[0];  // Ambil hanya bagian tanggal (YYYY-MM-DD)
-
-        return transactions.filter(tx => {
-            const txDate = tx.statTime.split(' ')[0];  // Ambil tanggal transaksi (YYYY-MM-DD)
-            return txDate === todayDate;  // Bandingkan tanggal transaksi dengan tanggal hari ini
-        });
-    }
-
-    // Fungsi untuk menampilkan transaksi dalam grid
+    // Fungsi untuk menampilkan transaksi dalam grid dengan D3.js
     function displayTransactions(transactions) {
         const container = document.getElementById('transaction-grid');
-        container.innerHTML = '';  // Reset grid sebelum menambah data baru
+        container.innerHTML = '';  // Reset grid
 
-        transactions.forEach(tx => {
-            const transactionElement = document.createElement('div');
-            transactionElement.classList.add('transaction-box');
-            
-            // Ukuran kotak berdasarkan jumlah transaksi (mengurangi skala)
-            const size = Math.min(Math.sqrt(tx.count) * 1.5, 200);  // Skala lebih kecil dan tidak lebih dari 200px
-            const color = tx.count > 500000 ? '#FF5722' : '#4CAF50';
+        const width = container.offsetWidth;
+        const height = window.innerHeight;
 
-            // Mengatur ukuran kotak dan warna
-            transactionElement.style.width = `${size}px`;
-            transactionElement.style.height = `${size}px`;
-            transactionElement.style.backgroundColor = color;
+        // Set up SVG canvas with D3.js
+        const svg = d3.select(container)
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
 
-            // Menambahkan informasi ke dalam kotak
-            transactionElement.innerHTML = `
-                <h4>${tx.statTime}</h4>
-                <p>Tx Count: ${tx.count}</p>
-            `;
+        // Scales for size
+        const sizeScale = d3.scaleSqrt()
+            .domain([0, d3.max(transactions, d => d.count)])
+            .range([10, 100]);  // Min size 10px, max size 100px
 
-            // Menambahkan event klik untuk detail transaksi
-            transactionElement.addEventListener('click', () => {
-                alert(`Date: ${tx.statTime}\nTransaction Count: ${tx.count}`);
-            });
-
-            container.appendChild(transactionElement);
-        });
+        // Create rectangles for each transaction
+        svg.selectAll('.transaction')
+            .data(transactions)
+            .enter()
+            .append('rect')
+            .attr('class', 'transaction-box')
+            .attr('x', (d, i) => (i % 10) * 110)  // Grid layout (10 columns)
+            .attr('y', (d, i) => Math.floor(i / 10) * 110)
+            .attr('width', d => sizeScale(d.count))
+            .attr('height', d => sizeScale(d.count))
+            .attr('fill', d => d.count > 500000 ? '#FF5722' : '#4CAF50')
+            .on('click', (event, d) => {
+                alert(`Date: ${d.statTime}\nTransaction Count: ${d.count}`);
+            })
+            .append('title')
+            .text(d => `Date: ${d.statTime}\nTx Count: ${d.count}`);
     }
 
     // Polling setiap 5 detik untuk memperbarui data
