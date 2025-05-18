@@ -11,10 +11,22 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             const transactions = data.result.list;
-            displayTransactions(transactions);  // Menampilkan transaksi di grid
+            const todayTransactions = filterTodayTransactions(transactions); // Filter transaksi hari ini
+            displayTransactions(todayTransactions);  // Menampilkan transaksi hari ini di grid
         })
         .catch(error => {
             console.error('Error fetching transaction data:', error);
+        });
+    }
+
+    // Fungsi untuk memfilter transaksi berdasarkan tanggal hari ini
+    function filterTodayTransactions(transactions) {
+        const today = new Date();
+        const todayDate = today.toISOString().split('T')[0];  // Ambil hanya bagian tanggal (YYYY-MM-DD)
+
+        return transactions.filter(tx => {
+            const txDate = tx.statTime.split(' ')[0];  // Ambil tanggal transaksi (YYYY-MM-DD)
+            return txDate === todayDate;  // Bandingkan tanggal transaksi dengan tanggal hari ini
         });
     }
 
