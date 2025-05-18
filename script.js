@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            const transactions = data.data;
+            const transactions = data.result.list;
             displayTransactions(transactions);
         })
         .catch(error => {
@@ -28,9 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
             txElement.classList.add('transaction-box');
 
             txElement.innerHTML = `
-                <h3>Tx ID: ${tx.txId}</h3>
-                <p class="amount">Amount: ${tx.amount}</p>
-                <p class="timestamp">Timestamp: ${new Date(tx.timestamp).toLocaleString()}</p>
+                <h3>Date: ${tx.statTime}</h3>
+                <p class="amount">Transaction Count: ${tx.count}</p>
             `;
 
             container.appendChild(txElement);
