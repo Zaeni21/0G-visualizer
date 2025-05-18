@@ -13,6 +13,7 @@ body {
 
 .container {
     text-align: center;
+    width: 100%;
 }
 
 h1 {
@@ -22,23 +23,23 @@ h1 {
 
 #transaction-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ukuran kotak minimum lebih kecil */
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ukuran kotak lebih besar */
+    gap: 15px;
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     justify-items: center;
 }
 
-/* Menyesuaikan ukuran kotak transaksi */
 .transaction-box {
     background-color: green;
-    padding: 10px;
+    padding: 15px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
@@ -48,10 +49,11 @@ h1 {
 }
 
 .transaction-box h4, .transaction-box p {
-    font-size: 0.8em;  /* Menyesuaikan ukuran teks */
+    font-size: 1em; /* Ukuran font lebih besar */
+    color: #fff;
 }
 
-/* Untuk tampilan di layar kecil, pastikan grid responsif */
+/* Media Queries untuk tampilan mobile */
 @media (max-width: 600px) {
     h1 {
         font-size: 1.5em;
@@ -62,10 +64,10 @@ h1 {
     }
 
     .transaction-box {
-        padding: 8px;
+        padding: 12px;
     }
 
     .transaction-box h4, .transaction-box p {
-        font-size: 0.7em;  /* Ukuran teks lebih kecil untuk perangkat kecil */
+        font-size: 0.8em;
     }
 }
